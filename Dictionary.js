@@ -61,6 +61,51 @@ const handleSearch = async (word) => {
             result.appendChild(definitionDiv);
             setTimeout(() => definitionDiv.classList.add('show-content'), 600);
         }
+
+        // Telugu Definition
+        let definitionForTranslation = dictionaryData[0].meanings.find(m => m.definitions[0].definition)?.definitions[0].definition || "";
+        if (definitionForTranslation) {
+        try {
+            let translateResponse = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=te&dt=t&q=${encodeURIComponent(definitionForTranslation)}`);
+            let translateData = await translateResponse.json();
+            let translatedDefinition = translateData[0][0][0];
+            let TelugudefinitionDiv = document.createElement("div");
+            TelugudefinitionDiv.className = "definition";
+            TelugudefinitionDiv.innerHTML = `<strong>Definition(Telugu):</strong> ${translatedDefinition}`;
+            result.appendChild(TelugudefinitionDiv);
+            setTimeout(() => TelugudefinitionDiv.classList.add('show-content'), 600);
+            } 
+            catch (err) {
+            console.error("Error fetching Telugu translation:", err);
+            let errorDiv = document.createElement("div");
+            errorDiv.className = "error";
+            errorDiv.innerHTML = `<strong>Definition(Telugu):</strong> Unable to fetch translation.`;
+            result.appendChild(errorDiv);
+             }
+           }
+
+           // Hindi Definition
+            let definitionForTranslation2 = dictionaryData[0].meanings.find(m => m.definitions[0].definition)?.definitions[0].definition || "";
+            if (definitionForTranslation2) {
+            try {
+            let translateResponse2 = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=hi&dt=t&q=${encodeURIComponent(definitionForTranslation)}`);
+            let translateData2 = await translateResponse2.json();
+            let translatedDefinition2 = translateData2[0][0][0];           
+            let hindiDefinitionDiv = document.createElement("div");
+            hindiDefinitionDiv.className = "definition";
+            hindiDefinitionDiv.innerHTML = `<strong>Definition(Hindi):</strong> ${translatedDefinition2}`;
+            result.appendChild(hindiDefinitionDiv);
+            setTimeout(() => hindiDefinitionDiv.classList.add('show-content'), 600);
+            }
+            catch (err) {
+            console.error("Error fetching Hindi translation:", err);
+            let errorDiv = document.createElement("div");
+            errorDiv.className = "error";
+            errorDiv.innerHTML = `<strong>Definition(Hindi):</strong> Unable to fetch translation.`;
+            result.appendChild(errorDiv);
+            }
+           }
+           
         let example = findExampleWithWord(dictionaryData[0].meanings, word) || dictionaryData[0].meanings.find(m => m.definitions.find(d => d.example))?.definitions[0].example || "";
         if (example) {
             let exampleDiv = document.createElement("div");
